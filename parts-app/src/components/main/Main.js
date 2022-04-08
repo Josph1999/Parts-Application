@@ -9,7 +9,6 @@ function Main() {
   const styles= useStyles()
   return (
     <div className={styles.main}>
-      <LeftPanel></LeftPanel>
         <RightPanel/>
     </div>
   )

@@ -36,11 +36,6 @@ const handleToggle = (value) => () => {
         return (
           <ListItem
             key={value}
-            secondaryAction={
-              <IconButton edge="end" aria-label="comments">
-                <CommentIcon />
-              </IconButton>
-            }
             disablePadding
           >
             <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
@@ -53,7 +48,7 @@ const handleToggle = (value) => () => {
                   inputProps={{ 'aria-labelledby': labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+              <ListItemText id={labelId} primary={`კატეგორია ${value + 1}`} />
             </ListItemButton>
           </ListItem>
         );
