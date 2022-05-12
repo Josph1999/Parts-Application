@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Cards from '../cards/Cards'
 
 import { useTheme } from '@mui/material/styles';
@@ -23,15 +23,30 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Leftpanel from '../leftpanel/Leftpanel';
+import Button from '@mui/material/Button';
+import AddProduct from '../AddProduct/AddProduct';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import { useDispatch, useSelector } from 'react-redux';
+import { addProduct } from '../../redux/actions/actions';
+import { initialState } from '../../redux/reducers/reducers';
 
 
 
 function RightPanel() {
+  const dispatch = useDispatch()
+  const [photo, setPhoto] = useState('');
+  const [description, setDescription] = useState('');
+  const [header, setHeader] = useState('');
+
+ const {productArray: getProducts} = useSelector((state) => ({
+   productArray: state.productArray
+ }))
 
   const drawerWidth = 240
   const theme = useTheme();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -41,8 +56,10 @@ function RightPanel() {
     setOpen(false);
   };
   const styles = useStyles()
+
   return (
     <div>
+      
        <Box sx={{ flexGrow: 1 }} >
       <AppBar position="fixed" className={styles.main} open={open}>
         <Toolbar>
@@ -64,6 +81,7 @@ function RightPanel() {
           >
             მანქანის ნაწილები
           </Typography>
+          <AddProduct/>
           <Typography>ძებნა</Typography>
           <Search>
             <SearchIconWrapper>
@@ -74,6 +92,7 @@ function RightPanel() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
+          
         </Toolbar>
       </AppBar>
       <Drawer
@@ -95,30 +114,18 @@ function RightPanel() {
           </IconButton>
         </DrawerHeader>
         <Divider />
+        
 <Leftpanel></Leftpanel>
+
       </Drawer>
     </Box>
     <Main open={open}>
        <div className={styles.cards}>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-       <Cards/>
-
+      {getProducts.map((item, index) => (
+        <Cards key={index} product={item} />
+      ))}
        </div>
+    
        </Main>
         </div>
   )

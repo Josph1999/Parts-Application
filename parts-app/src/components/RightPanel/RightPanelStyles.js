@@ -12,6 +12,9 @@ const useStyles = makeStyles({
      marginLeft:240,
      transition:0.5,
      marginTop: '50px'
+ },
+ button:{
+     
  }
 })
 
