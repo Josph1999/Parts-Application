@@ -1,6 +1,7 @@
 {
   "name": "parts-app",
   "version": "0.1.0",
+  "homepage": "http://hey.imdeveloper.ge/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.0",
