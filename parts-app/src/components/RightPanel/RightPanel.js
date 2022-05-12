@@ -23,6 +23,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Leftpanel from '../leftpanel/Leftpanel';
+import Button from '@mui/material/Button';
 
 
 
@@ -43,6 +44,7 @@ function RightPanel() {
   const styles = useStyles()
   return (
     <div>
+      
        <Box sx={{ flexGrow: 1 }} >
       <AppBar position="fixed" className={styles.main} open={open}>
         <Toolbar>
@@ -64,6 +66,7 @@ function RightPanel() {
           >
             მანქანის ნაწილები
           </Typography>
+          <Button variant="contained" className={styles.button}>Contained</Button>
           <Typography>ძებნა</Typography>
           <Search>
             <SearchIconWrapper>
@@ -74,6 +77,7 @@ function RightPanel() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
+          
         </Toolbar>
       </AppBar>
       <Drawer
@@ -95,11 +99,16 @@ function RightPanel() {
           </IconButton>
         </DrawerHeader>
         <Divider />
+        
 <Leftpanel></Leftpanel>
+
       </Drawer>
     </Box>
+    
     <Main open={open}>
+      
        <div className={styles.cards}>
+         
        <Cards/>
        <Cards/>
        <Cards/>
