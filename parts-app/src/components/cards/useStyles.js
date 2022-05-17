@@ -5,7 +5,12 @@ card:{
 
 margin: '10px 10px'
 
+},
+delete:{
+    marginLeft: '0px !important',
+    color: 'red !important'
 }
-})
+}
+)
 
 export {useStyles}
