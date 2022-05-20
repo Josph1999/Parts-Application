@@ -9,11 +9,19 @@ import { useStyles } from './AddProductStyles';
 import { addProduct } from '../../redux/actions/actions';
 import { initialState } from '../../redux/reducers/reducers';
 import Cards from '../cards/Cards'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import { v4 as uuid } from 'uuid';
+import Autocomplete from '@mui/material/Autocomplete';
+import { useForm } from "react-hook-form";
+const Yup = require('yup');
+const cities = require('../../georgian-cities.json')
 
 
 
 const AddProduct = () =>{
-
+  console.log(cities, "!@#!#")
+ const {errors} = useForm()
   const dispatch = useDispatch()
     const styles = useStyles()
     const [open, setOpen] = useState(false)
@@ -22,30 +30,47 @@ const AddProduct = () =>{
   const [photo, setPhoto] = useState('');
   const [description, setDescription] = useState('');
   const [header, setHeader] = useState('');
+  const small_id = uuid().slice(0,8)
 
- const {productArray: getProducts} = useSelector((state) => ({
-   productArray: state.productArray
- }))
+
+  const yupObject = Yup.object().shape({
+    header: Yup.string().required('სათაური აუცილებელია!'),
+    description: Yup.string().required('აღწერა აუცილებელია!'),
+    photo: Yup.string().required('ფოტო აუცილებელია!')
+    
+  });
 
  const product = {
   photo: photo,
   description: description,
-  header: header
+  header: header,
+  id: small_id.toLocaleUpperCase()
  }
 
 const handleAddProduct = async() => {
 try {
+  await yupObject.validate(product);
   dispatch(addProduct(product))
+  setOpen(false)
   setPhoto('')
   setDescription('')
   setHeader('')
 }catch(error){
-  console.log(error.message)
+  toast.error('გთხოვთ შეავსოთ ყველა ველი!', {
+    position: "top-center",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });
 }
-setOpen(false)
-
 }
-console.log(getProducts, "!!!!!!!!!!!!!1")
+const defaultProps = {
+  options: cities.cities,
+  getOptionLabel: (option) => option.name_ka,
+};
     const style = {
         position: 'absolute',
         top: '50%',
@@ -55,6 +80,10 @@ console.log(getProducts, "!!!!!!!!!!!!!1")
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 4,
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center'
       };
 
   return (
@@ -66,9 +95,25 @@ console.log(getProducts, "!!!!!!!!!!!!!1")
       >
         <Box sx={style}>
             <Typography>პროდუქტის დამატება</Typography>
-        <div className={styles.input}><TextField id="outlined-basic" label="სათაური" variant="outlined" onChange={(event) => setHeader(event.target.value)}/></div>
-        <div className={styles.input}><TextField id="outlined-basic" label="აღწერა" variant="outlined" onChange={(event) => setDescription(event.target.value)}/></div>    
-        <div className={styles.input}><TextField id="outlined-basic" label="ფოტო" variant="outlined" onChange={(event) => setPhoto(event.target.value)}/></div>
+        <div className={styles.input}><TextField required id="outlined-basic" label="სათაური" variant="outlined" onChange={(event) => setHeader(event.target.value)}/></div>
+        <div className={styles.input}><TextField required id="outlined-basic" label="აღწერა" variant="outlined" onChange={(event) => setDescription(event.target.value)}/></div>    
+        <div className={styles.input}><TextField required id="outlined-basic" label="ფოტო" variant="outlined" onChange={(event) => setPhoto(event.target.value)}/></div>
+        <Autocomplete
+        {...defaultProps}
+        id="disable-close-on-select"
+        disableCloseOnSelect
+        renderInput={(params) => (
+          <TextField {...params} label="აირჩიეთ ქალაქი" variant="standard" className={styles.cityInput}/>
+        )}
+      />
+       <Autocomplete
+        {...defaultProps}
+        id="disable-close-on-select"
+        disableCloseOnSelect
+        renderInput={(params) => (
+          <TextField {...params} label="აირჩიეთ უბანი" variant="standard" className={styles.cityInput}/>
+        )}
+      />
         <Button variant="contained" onClick={handleAddProduct}>პროდუქტის დამატება</Button>
     </Box>
       </Modal>
