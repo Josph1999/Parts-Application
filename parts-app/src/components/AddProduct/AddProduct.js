@@ -14,6 +14,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useForm } from "react-hook-form";
+import { storage } from '../../firebase/firebase';
+import {ref, uploadBytes, listAll, getDownloadURL} from 'firebase/storage'
+import { Input } from '@mui/material';
 const Yup = require('yup');
 const cities = require('../../georgian-cities.json')
 
@@ -30,6 +33,10 @@ const AddProduct = () =>{
   const [photo, setPhoto] = useState('');
   const [description, setDescription] = useState('');
   const [header, setHeader] = useState('');
+  const [imageUpload, setImageUpload] = useState(null)
+  const [imageList, setImageList] = useState([])
+
+  const imageListRef = ref(storage, "images/")
   const small_id = uuid().slice(0,8)
 
 
@@ -41,12 +48,13 @@ const AddProduct = () =>{
   });
 
  const product = {
-  photo: photo,
+  photo: imageList,
   description: description,
   header: header,
   id: small_id.toLocaleUpperCase()
  }
 
+ console.log(imageList[0], "THIS IS IT")
 const handleAddProduct = async() => {
 try {
   await yupObject.validate(product);
@@ -85,7 +93,23 @@ const defaultProps = {
         flexDirection: 'column',
         alignItems: 'center'
       };
+const handleAddPhoto = () => {
 
+ if(imageUpload == null) return;
+ const imageRef = ref(storage, `images/${imageUpload.name + small_id}`)
+ uploadBytes(imageRef, imageUpload).then(() => {
+   alert("Image Uploaded")
+ })
+}
+useEffect(() => {
+listAll(imageListRef).then((response) => {
+response.items.forEach((item) => {
+  getDownloadURL(item).then((url) => {
+    setImageList((prev) => [...prev, url])
+  })
+})
+})
+}, [])
   return (
     <div>
         <Button variant="contained" onClick={handleOpen}>პროდუქტის დამატება</Button>
@@ -96,8 +120,9 @@ const defaultProps = {
         <Box sx={style}>
             <Typography>პროდუქტის დამატება</Typography>
         <div className={styles.input}><TextField required id="outlined-basic" label="სათაური" variant="outlined" onChange={(event) => setHeader(event.target.value)}/></div>
-        <div className={styles.input}><TextField required id="outlined-basic" label="აღწერა" variant="outlined" onChange={(event) => setDescription(event.target.value)}/></div>    
-        <div className={styles.input}><TextField required id="outlined-basic" label="ფოტო" variant="outlined" onChange={(event) => setPhoto(event.target.value)}/></div>
+        <div className={styles.input}><TextField required id="outlined-basic" label="აღწერა" variant="outlined" onChange={(event) => setDescription(event.target.value)}/></div> 
+        <Input placeholder='დაამატეთ ფოტოს ლინკი' type='file' onChange={(event) => {setImageUpload(event.target.files[0])}}></Input>   
+        <div className={styles.input}><Button onClick={handleAddPhoto}>ფოტოს დამატება</Button></div>
         <Autocomplete
         {...defaultProps}
         id="disable-close-on-select"
