@@ -16,6 +16,14 @@ import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { editProduct, deleteProduct } from '../../redux/actions/actions';
+import { useTheme } from '@mui/material/styles';
+import MobileStepper from '@mui/material/MobileStepper';
+import Paper from '@mui/material/Paper';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import SwipeableViews from 'react-swipeable-views';
+import { autoPlay } from 'react-swipeable-views-utils';
+
 function Cards({ product }) {
   const styles = useStyles()
   const dispatch = useDispatch()
@@ -55,7 +63,41 @@ function Cards({ product }) {
   }
   const handleDeleteProduct = () => {
     dispatch(deleteProduct({ id: product.id }))
+    
   }
+  const images = [
+    {
+      label: 'San Francisco – Oakland Bay Bridge, United States',
+      imgPath:
+        'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    },
+    {
+      label: 'Bird',
+      imgPath:
+        'https://thumbs.dreamstime.com/b/luxury-big-modern-house-electric-car-luxury-modern-house-electric-car-141295838.jpg',
+    },
+    {
+      label: 'Bali, Indonesia',
+      imgPath:
+        'https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2021/08/download-23.jpg',
+    }
+  ];
+  
+  const theme = useTheme();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const maxSteps = images.length;
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleStepChange = (step) => {
+    setActiveStep(step);
+  };
   return (
     <div className={styles.card}>
 
@@ -71,7 +113,7 @@ function Cards({ product }) {
           <Button variant="contained" onClick={submitEditedHome}>რედაქტირება</Button>
         </Box>
       </Modal>
-      <Card sx={{ width: 250 }}>
+      <Card sx={{ width: 400 }}>
         <Stack direction="row" spacing={2}>
           <Button variant="outlined" startIcon={<EditIcon />} onClick={handleOpen}>
             რედაქტირება
@@ -81,14 +123,36 @@ function Cards({ product }) {
           </Button>
         </Stack>
         <CardActionArea>
-          <CardMedia
-            component="img"
-            height="140"
-            image={product.photo}
-            alt="Car Part"
-          />
+        <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
+          <CardMedia>
+      <SwipeableViews
+        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={activeStep}
+        onChangeIndex={handleStepChange}
+        enableMouseEvents
+      >
+        {images.map((step, index) => (
+          <div key={step.label}>
+            {Math.abs(activeStep - index) <= 2 ? (
+              <Box
+                component="img"
+                sx={{
+                  height: 255,
+                  display: 'block',
+                  maxWidth: 400,
+                  overflow: 'hidden',
+                  width: '100%',
+                }}
+                src={step.imgPath}
+                alt={step.label}
+              />
+            ) : null}
+          </div>
+        ))}
+      </SwipeableViews>
+      </CardMedia>
+    </Box>
           <CardContent>
-
             <Typography gutterBottom variant="h5" component="div">
               {product.header}
             </Typography>

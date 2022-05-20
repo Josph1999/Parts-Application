@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Cards from '../cards/Cards'
 
 import { useTheme } from '@mui/material/styles';
@@ -30,7 +30,8 @@ import TextField from '@mui/material/TextField';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProduct } from '../../redux/actions/actions';
 import { initialState } from '../../redux/reducers/reducers';
-
+import Pagination from '@mui/material/Pagination';
+import AddPagination from '../AddPagination/AddPagination';
 
 
 function RightPanel() {
@@ -43,20 +44,19 @@ function RightPanel() {
    productArray: state.productArray
  }))
 
+ const [products, setProducts] = useState([])
+
   const drawerWidth = 240
   const theme = useTheme();
 
   const [open, setOpen] = useState(false);
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-
   const handleDrawerClose = () => {
     setOpen(false);
   };
   const styles = useStyles()
-
   return (
     <div>
       
@@ -121,12 +121,13 @@ function RightPanel() {
     </Box>
     <Main open={open}>
        <div className={styles.cards}>
-      {getProducts.map((item, index) => (
+      {products.map((item, index) => (
         <Cards key={index} product={item} />
       ))}
        </div>
     
        </Main>
+       <AddPagination setProducts={(p) => setProducts(p)}/>
         </div>
   )
 }

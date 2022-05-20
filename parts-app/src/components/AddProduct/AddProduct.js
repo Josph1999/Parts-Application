@@ -12,10 +12,15 @@ import Cards from '../cards/Cards'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useForm } from "react-hook-form";
 const Yup = require('yup');
+const cities = require('../../georgian-cities.json')
+
+
 
 const AddProduct = () =>{
+  console.log(cities, "!@#!#")
  const {errors} = useForm()
   const dispatch = useDispatch()
     const styles = useStyles()
@@ -50,7 +55,6 @@ try {
   setPhoto('')
   setDescription('')
   setHeader('')
-  return true
 }catch(error){
   toast.error('გთხოვთ შეავსოთ ყველა ველი!', {
     position: "top-center",
@@ -62,9 +66,11 @@ try {
     progress: undefined,
     });
 }
-
-
 }
+const defaultProps = {
+  options: cities.cities,
+  getOptionLabel: (option) => option.name_ka,
+};
     const style = {
         position: 'absolute',
         top: '50%',
@@ -74,6 +80,10 @@ try {
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 4,
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center'
       };
 
   return (
@@ -88,6 +98,22 @@ try {
         <div className={styles.input}><TextField required id="outlined-basic" label="სათაური" variant="outlined" onChange={(event) => setHeader(event.target.value)}/></div>
         <div className={styles.input}><TextField required id="outlined-basic" label="აღწერა" variant="outlined" onChange={(event) => setDescription(event.target.value)}/></div>    
         <div className={styles.input}><TextField required id="outlined-basic" label="ფოტო" variant="outlined" onChange={(event) => setPhoto(event.target.value)}/></div>
+        <Autocomplete
+        {...defaultProps}
+        id="disable-close-on-select"
+        disableCloseOnSelect
+        renderInput={(params) => (
+          <TextField {...params} label="აირჩიეთ ქალაქი" variant="standard" className={styles.cityInput}/>
+        )}
+      />
+       <Autocomplete
+        {...defaultProps}
+        id="disable-close-on-select"
+        disableCloseOnSelect
+        renderInput={(params) => (
+          <TextField {...params} label="აირჩიეთ უბანი" variant="standard" className={styles.cityInput}/>
+        )}
+      />
         <Button variant="contained" onClick={handleAddProduct}>პროდუქტის დამატება</Button>
     </Box>
       </Modal>
