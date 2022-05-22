@@ -65,7 +65,9 @@ function Cards({ product }) {
     dispatch(deleteProduct({ id: product.id }))
     
   }
-  console.log(product.photo)
+
+  const photos = product.photo.map(item => item)
+  console.log(product, "THIS IS PRODUCT PHOTOOOOOOOO")
   const images = [
     {
       label: 'San Francisco – Oakland Bay Bridge, United States',

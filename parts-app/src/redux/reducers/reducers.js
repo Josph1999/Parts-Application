@@ -11,7 +11,6 @@ const rootReducer = (state = initialState,action) => {
 
     switch (type) {
         case ADD_PRODUCT: {
-            console.log(initialState)
             return {
                 ...state,
                 productArray: [...state.productArray, payload]
