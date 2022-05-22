@@ -65,11 +65,13 @@ function Cards({ product }) {
     dispatch(deleteProduct({ id: product.id }))
     
   }
+
+  const photos = product.photo.map(item => item)
+  console.log(product, "THIS IS PRODUCT PHOTOOOOOOOO")
   const images = [
     {
       label: 'San Francisco – Oakland Bay Bridge, United States',
-      imgPath:
-        'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      imgPath: product.photo
     },
     {
       label: 'Bird',
