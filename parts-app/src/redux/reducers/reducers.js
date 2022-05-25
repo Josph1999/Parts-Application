@@ -1,8 +1,9 @@
-import { ADD_PRODUCT, DELETE_PRODUCT, EDIT_PRODUCT } from "../constants/constants";
+import { ADD_PRODUCT, DELETE_PRODUCT, EDIT_PRODUCT, GET_PRODUCT } from "../constants/constants";
 
 
 export const initialState = {
-    productArray: []
+    productArray: [],
+    currentProduct: null,
 }
 
 const rootReducer = (state = initialState,action) => {
@@ -36,6 +37,15 @@ const rootReducer = (state = initialState,action) => {
             return{
                 ...state,
                 productArray: state.productArray.filter((item) => item.id !== payload.id)
+            }
+        }
+        case GET_PRODUCT: {
+            const findProduct = state.productArray.find(
+                (product) => (product.id) === payload.id
+            )
+            return {
+                ...state,
+                currentProduct: findProduct
             }
         }
         default:

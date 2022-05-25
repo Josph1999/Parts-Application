@@ -24,7 +24,7 @@ useEffect(() => {
     const data = getProducts.slice(pagination.from, pagination.to)
     setPagination({...pagination, count: getProducts.length})
     setProducts(data)
-},[pagination.from, pagination.to])
+},[pagination.from, pagination.to, getProducts])
 
 const handlePageChange = (event, page) => {
     const from = (page -1) * pageSize

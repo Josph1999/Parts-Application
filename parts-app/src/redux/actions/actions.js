@@ -1,7 +1,8 @@
 import {
     ADD_PRODUCT,
     EDIT_PRODUCT,
-    DELETE_PRODUCT
+    DELETE_PRODUCT,
+    GET_PRODUCT
 } from '../constants/constants'
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -17,5 +18,9 @@ const editProduct = (payload) => ({
     type: DELETE_PRODUCT,
     payload,
   });
+  const getProduct = (payload) => ({
+    type: GET_PRODUCT,
+    payload,
+  });
 
-export {addProduct, editProduct, deleteProduct}
+export {addProduct, editProduct, deleteProduct, getProduct}
