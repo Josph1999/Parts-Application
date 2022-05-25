@@ -27,32 +27,41 @@ const cities = require('../../georgian-cities.json')
 
 const AddProduct = () =>{
   const dispatch = useDispatch()
+    const [error, setError] = useState('')
     const styles = useStyles()
     const [open, setOpen] = useState(false)
     const handleOpen = () => setOpen(true)
-    const handleClose = ()=> setOpen(false)
+    const handleClose = ()=> {
+      setOpen(false)
+      setError('')
+    }
   const [photo, setPhoto] = useState('');
   const [description, setDescription] = useState('');
   const [header, setHeader] = useState('');
   const [imageUpload, setImageUpload] = useState([])
   const [imageList, setImageList] = useState([])
+
  const [notify, setNotify] = useState(false)
   const imageListRef = ref(storage, "images/")
   const small_id = uuid().slice(0,8)
 
 
   const yupObject = Yup.object().shape({
-    header: Yup.string().required('სათაური აუცილებელია!'),
-    description: Yup.string().required('აღწერა აუცილებელია!')
+    description: Yup.string().required('აღწერა აუცილებელია!'),
+    header: Yup.string().required('სათაური აუცილებელია!')
+
     
   });
 
  const product = {
   photo: imageList.map(item => item),
-  description: description,
   header: header,
+  description: description,
   id: small_id.toLocaleUpperCase()
  }
+
+
+
 const handleAddProduct = async() => {
 try {
   await yupObject.validate(product);
@@ -63,11 +72,15 @@ try {
   setImageList([])
   setDescription('')
   setHeader('')
+  setError('')
 }catch(error){
-    console.log(error)
+  alert(error.message)
+  setError(error.message)
+    console.log(error.message)
 }
 }
 
+console.log(error)
 const handleChange = (event) => {
   for(let i=0; i < event.target.files.length; i++){
     const newImage = event.target.files[i]
@@ -75,7 +88,6 @@ const handleChange = (event) => {
     setImageUpload((prevState) => [...prevState, newImage])
   }
 }
-
 const defaultProps = {
   options: cities.cities,
   getOptionLabel: (option) => option.name_ka,
@@ -115,7 +127,7 @@ response.items.forEach((item) => {
   })
 })
 })
-}, [])
+}, [imageUpload])
 console.log("!@#!@#!@#")
   return (
     <div>
@@ -126,8 +138,8 @@ console.log("!@#!@#!@#")
       >
         <Box sx={style}>
             <Typography>პროდუქტის დამატება</Typography>
-        <div className={styles.input}><TextField required id="outlined-basic" label="სათაური" variant="outlined" onChange={(event) => setHeader(event.target.value)}/></div>
-        <div className={styles.input}><TextField required id="outlined-basic" label="აღწერა" variant="outlined" onChange={(event) => setDescription(event.target.value)}/></div> 
+        <div className={styles.input}><TextField required id="outlined-basic" label="სათაური" variant="outlined" onChange={(event) => setHeader(event.target.value)} error={error === 'სათაური აუცილებელია!' ? true:false}/></div>
+        <div className={styles.input}><TextField required id="outlined-basic" label="აღწერა" variant="outlined" onChange={(event) => setDescription(event.target.value)} error={error === 'აღწერა აუცილებელია!' ? true:false}/></div> 
         <Input placeholder='დაამატეთ ფოტოს ლინკი' type='file' inputProps={{multiple: true}} onChange={handleChange}></Input>   
         <div className={styles.input}><Button onClick={handleAddPhoto}>ფოტოს დამატება</Button></div>
         <Autocomplete

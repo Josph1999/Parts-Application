@@ -13,9 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import Box from '@mui/material/Box';
+import { Link, Outlet } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { editProduct, deleteProduct } from '../../redux/actions/actions';
+import { editProduct, deleteProduct, getProduct } from '../../redux/actions/actions';
 import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
@@ -64,6 +65,17 @@ function Cards({ product }) {
   const handleDeleteProduct = () => {
     dispatch(deleteProduct({ id: product.id }))
     
+  }
+
+  const setProduct = () => {
+    dispatch(
+      getProduct({
+        id: product.id,
+     header: product.header,
+    description: product.description
+      })
+    )
+
   }
 
   const photos = product.photo.map(item => item)
@@ -124,7 +136,9 @@ function Cards({ product }) {
             წაშლა
           </Button>
         </Stack>
-        <CardActionArea>
+
+        <CardActionArea onClick={setProduct}>
+        <Link to={`house/${product.id}`} key={product.id}>
         <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
           <CardMedia>
       <SwipeableViews
@@ -165,8 +179,11 @@ function Cards({ product }) {
               ID: {product.id}
             </Typography>
           </CardContent>
+          </Link>
         </CardActionArea>
+
       </Card>
+      <Outlet />
       <ToastContainer
         position="top-center"
         autoClose={5000}
